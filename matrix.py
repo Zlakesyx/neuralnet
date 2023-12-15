@@ -23,7 +23,7 @@ class Matrix:
     def dot_product(self, matrix_a: "Matrix", matrix_b: "Matrix") -> "Matrix":
         """Dot Product of two matrices"""
         if matrix_a.cols != matrix_b.rows:
-            raise ValueError("Invalid dimensions")
+            raise ValueError(f"Invalid dimensions: {matrix_a.cols=}, {matrix_b.rows=}")
 
         new_matrix = Matrix(matrix_a.rows, matrix_b.cols)
         new_matrix.data = [[0] * matrix_b.cols for _ in range(matrix_a.rows)]
@@ -35,6 +35,23 @@ class Matrix:
                     dot_product += matrix_a.data[row][col_a] * matrix_b.data[col_a][col]
                 new_matrix.data[row][col] = dot_product
 
+        return new_matrix
+
+    @classmethod
+    def from_list(self, a_list: list) -> "Matrix":
+        matrix = Matrix(len(a_list), 1)
+
+        for i, val in enumerate(a_list):
+            matrix.data[i][0] = val
+
+        return matrix
+
+    @classmethod
+    def transform(self, old_matrix: "Matrix") -> "Matrix":
+        new_matrix = Matrix(old_matrix.cols, old_matrix.rows)
+        for row in range(old_matrix.rows):
+            for col in range(old_matrix.cols):
+                new_matrix.data[col][row] = old_matrix.data[row][col]
         return new_matrix
 
     def zeroize(self) -> None:
