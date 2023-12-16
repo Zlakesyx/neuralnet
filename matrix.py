@@ -47,11 +47,34 @@ class Matrix:
         return matrix
 
     @classmethod
-    def transform(self, old_matrix: "Matrix") -> "Matrix":
+    def to_list(self, matrix: "Matrix") -> list:
+        _list = []
+
+        for row in matrix.data:
+            _list.extend(row)
+
+        return _list
+
+    @classmethod
+    def transpose(self, old_matrix: "Matrix") -> "Matrix":
         new_matrix = Matrix(old_matrix.cols, old_matrix.rows)
         for row in range(old_matrix.rows):
             for col in range(old_matrix.cols):
                 new_matrix.data[col][row] = old_matrix.data[row][col]
+        return new_matrix
+
+    @classmethod
+    def subtract(self, matrix_a: "Matrix", matrix_b: "Matrix") -> None:
+        """substract"""
+        if not all([matrix_a.rows == matrix_b.rows, matrix_a.cols == matrix_b.cols]):
+            raise ValueError("Unable to subtract matrices with different dimensions")
+
+        new_matrix = Matrix(matrix_a.rows, matrix_a.cols)
+
+        for row in range(matrix_a.rows):
+            for col in range(matrix_a.cols):
+                new_matrix.data[row][col] = matrix_a.data[row][col] - matrix_b.data[row][col]
+
         return new_matrix
 
     def zeroize(self) -> None:
@@ -72,15 +95,6 @@ class Matrix:
         for row in range(self.rows):
             for col in range(self.cols):
                 self.data[row][col] += matrix.data[row][col]
-
-    def substract(self, matrix: "Matrix") -> None:
-        """substract"""
-        if not all([self.rows == matrix.rows, self.cols == matrix.cols]):
-            raise ValueError("Unable to subtract matrices with different dimensions")
-
-        for row in range(self.rows):
-            for col in range(self.cols):
-                self.data[row][col] -= matrix.data[row][col]
 
     def map_func(self, func: any) -> None:
         for row in range(self.rows):
