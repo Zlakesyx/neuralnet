@@ -1,15 +1,23 @@
 import copy
 import random
+from typing import Union
 
 
 class Matrix:
-    def __init__(self, rows, columns) -> None:
-        self.rows = rows
-        self.cols = columns
-        self.data = [[0] * self.cols for _ in range(self.rows)]
+    def __init__(self, rows=None, columns=None, matrix: "Matrix" = None) -> None:
+        if matrix:
+            self.rows = matrix.rows
+            self.cols = matrix.cols
+            self.data = matrix.data
+        elif rows and columns:
+            self.rows = rows
+            self.cols = columns
+            self.data = [[0] * self.cols for _ in range(self.rows)]
+        else:
+            raise AttributeError("Matrix must have rows and columns or a Matrix")
 
     @classmethod
-    def multiply(self, num: int, matrix: "Matrix") -> "Matrix":
+    def multiply(self, num: float, matrix: "Matrix") -> "Matrix":
         """Multiplies scalar value"""
         new_matrix = copy.deepcopy(matrix)
 
@@ -23,7 +31,8 @@ class Matrix:
     def dot_product(self, matrix_a: "Matrix", matrix_b: "Matrix") -> "Matrix":
         """Dot Product of two matrices"""
         if matrix_a.cols != matrix_b.rows:
-            raise ValueError(f"Invalid dimensions: {matrix_a.cols=}, {matrix_b.rows=}")
+            raise ValueError("Invalid dimensions, Matrix A cols must match "
+                             f"matrix B rows: {matrix_a.cols=}, {matrix_b.rows=}")
 
         new_matrix = Matrix(matrix_a.rows, matrix_b.cols)
         new_matrix.data = [[0] * matrix_b.cols for _ in range(matrix_a.rows)]
@@ -76,6 +85,21 @@ class Matrix:
                 new_matrix.data[row][col] = matrix_a.data[row][col] - matrix_b.data[row][col]
 
         return new_matrix
+
+    def mult(self, value: Union[float, "Matrix"]) -> None:
+        """Multiplies scalar value"""
+
+        if isinstance(value, float):
+            for row in range(self.rows):
+                for col in range(self.cols):
+                    self.data[row][col] *= value
+        else:
+            if all([self.rows != value.rows, self.cols != value.cols]):
+                raise ValueError("Rows and Columns must match for elementwise multiplication "
+                                 f"{self.rows=}, {value.rows=}, {self.cols=}, {value.cols=}")
+            for row in range(self.rows):
+                for col in range(self.cols):
+                    self.data[row][col] *= value.data[row][col]
 
     def zeroize(self) -> None:
         for row in range(self.rows):
