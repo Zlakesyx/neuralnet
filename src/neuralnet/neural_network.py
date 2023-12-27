@@ -1,7 +1,7 @@
 import math
 import random
 
-from matrix import Matrix
+from neuralnet.matrix import Matrix
 
 
 class NeuralNetwork:
@@ -15,7 +15,7 @@ class NeuralNetwork:
         self.ih_matrix.randomize()
         self.ho_matrix.randomize()
 
-        self.learning_rate = 0.08
+        self.learning_rate = 0.1
 
     def train(self, inputs: list, targets: list) -> None:
         """
@@ -73,10 +73,6 @@ class NeuralNetwork:
 
         return Matrix.to_list(output_matrix)
 
-    def predict(self) -> None:
-        """Predicts the output"""
-        print(self.ho_matrix)
-
     def sigmoid(self, x: float) -> None:
         """Sigmoid activation function"""
         return 1 / (1 + math.e ** (-x))
@@ -89,45 +85,8 @@ class NeuralNetwork:
         # Actual derivative: self.sigmoid(x) * (1 - self.sigmoid(x))
         return x * (1 - self.sigmoid(x))
 
-
-#nn = NeuralNetwork(2, 2, 1)
-#training = [
-#    {
-#        "input": [0, 0],
-#        "target": [0]
-#    },
-#    {
-#        "input": [0, 1],
-#        "target": [1]
-#    },
-#    {
-#        "input": [1, 0],
-#        "target": [1]
-#    },
-#    {
-#        "input": [1, 1],
-#        "target": [0]
-#    },
-#]
-#
-#
-#for _ in range(50000):
-#    test = random.choice(training)
-#    nn.train(test["input"], test["target"])
-#
-#correct = 0
-#total = 0
-#
-#for _ in range(100):
-#    test = random.choice(training)
-#    prediction = nn.feed_forward(test["input"])
-#    if prediction[0] >= test["target"][0] - 0.1:
-#        correct += 1
-#    total += 1
-#
-#print(f"{correct / total * 100}%")
-
-#print(nn.feed_forward([0, 0]))
-#print(nn.feed_forward([0, 1]))
-#print(nn.feed_forward([1, 0]))
-#print(nn.feed_forward([1, 1]))
+    def mutate(self, func: any) -> None:
+        self.ih_matrix.map_func(func)
+        self.ho_matrix.map_func(func)
+        self.h_bias.map_func(func)
+        self.o_bias.map_func(func)
