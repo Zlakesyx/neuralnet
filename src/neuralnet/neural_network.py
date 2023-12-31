@@ -14,6 +14,8 @@ class NeuralNetwork:
         self.o_bias = Matrix(output_nodes, 1)
         self.ih_matrix.randomize()
         self.ho_matrix.randomize()
+        self.h_bias.randomize()
+        self.o_bias.randomize()
 
         self.learning_rate = 0.1
 
