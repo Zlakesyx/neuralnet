@@ -19,6 +19,13 @@ class NeuralNetwork:
 
         self.learning_rate = 0.1
 
+    @classmethod
+    def merge(self, network_a: "NeuralNetwork", network_b: "NeuralNetwork") -> "NeuralNetwork":
+        """
+        TODO implement
+        """
+        raise NotImplementedError
+
     def train(self, inputs: list, targets: list) -> None:
         """
         Trains network based on given inputs and expected results with
